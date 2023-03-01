@@ -4,7 +4,9 @@ using Asteroids.Model;
 public class SpawnExample : MonoBehaviour
 {
     [SerializeField] private PresentersFactory _factory;
-    [SerializeField] private Root _init;
+    [SerializeField] private Root _root;
+    [SerializeField] private int _minSoldiersInArmy;
+    [SerializeField] private int _maxSoldierInArmy;
 
     private int _index;
     private float _secondsPerIndex = 1f;
@@ -24,11 +26,11 @@ public class SpawnExample : MonoBehaviour
     {
         float chance = Random.Range(0, 100);
 
-        if (chance < 20)
+        if (chance < 80)
         {
-            _factory.CreateNlo(new Nlo(_init.Ship, GetRandomPositionOutsideScreen(), Config.NloSpeed));
+            _factory.CreateNlo(new Nlo(_root.Ship, GetRandomPositionOutsideScreen(), Config.NloSpeed));
 
-            int countSoldiers = Random.Range(0, 5);
+            int countSoldiers = Random.Range(_minSoldiersInArmy, _maxSoldierInArmy);
             Vector2 posRedArmy = GetRandomPositionOutsideScreen();
             Vector2 posBlueArmy = GetRandomPositionOutsideScreen();
             _factory.CreateToWarningSides(countSoldiers, posRedArmy, posBlueArmy);

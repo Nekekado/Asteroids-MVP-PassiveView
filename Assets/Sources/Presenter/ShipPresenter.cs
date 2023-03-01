@@ -2,24 +2,24 @@
 
 public class ShipPresenter : Presenter
 {
-    private Root _init;
+    private Root _root;
 
-    public void Init(Root init)
+    public void Init(Root root)
     {
-        _init = init;
+        _root = root;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            if(_init.Ship.Health > 0)
+            if(_root.Ship.Health > 0)
             {
-                _init.Ship.TakeDamage();
+                _root.Ship.TakeDamage();
             }
             else
             {
-                _init.DisableShip();
+                _root.DisableShip();
             }
         }
     }

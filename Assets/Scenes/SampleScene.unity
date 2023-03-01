@@ -601,6 +601,36 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &606980656
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 606980657}
+  m_Layer: 0
+  m_Name: RedSoldiers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &606980657
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 606980656}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 70.9686, y: 2.0950549, z: -21.581774}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &680665653
 GameObject:
   m_ObjectHideFlags: 0
@@ -633,6 +663,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80bc1618725e6a5448b3576229325241, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HasTarget: 0
 --- !u!212 &680665655
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1418,11 +1449,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _camera: {fileID: 963194227}
+  _root: {fileID: 1581576386}
   _laserGunBulletTemplate: {fileID: 1494122412635844189, guid: 5945db22c3379bd48891ca1f8fa788e5, type: 3}
   _defaultGunBulletTemplate: {fileID: -1156457070632799784, guid: 9ac0a761c39837c438fc2f5cbde37379, type: 3}
   _asteroidTemplate: {fileID: -5592899209094444788, guid: 7b512be35dd70a740b70ad3f11129f6b, type: 3}
   _asteroidPartTemplate: {fileID: 2496268463148620810, guid: f9673b8bf2b901049947fef6ed94e495, type: 3}
   _nloTemplate: {fileID: -3177811691921934883, guid: 227e6133de9075a44aa0ad05e2399431, type: 3}
+  _blueSoldierTemplate: {fileID: -8020511832773779815, guid: 8a42177143b3d5548a1fc2392e7ad0b7, type: 3}
+  _redSoldierTemplate: {fileID: 5843707956219132984, guid: 5d3bed30f4084a3409346f71db344bdb, type: 3}
+  _redSoldiers: {fileID: 606980657}
+  _blueSoldiers: {fileID: 1920817031}
 --- !u!114 &1581576390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1436,7 +1472,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _factory: {fileID: 1581576389}
-  _init: {fileID: 1581576386}
+  _root: {fileID: 1581576386}
+  _minSoldiersInArmy: 1
+  _maxSoldierInArmy: 5
 --- !u!1 &1724014138
 GameObject:
   m_ObjectHideFlags: 0
@@ -1578,7 +1616,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23859c3c2e75bee49a1c80e317f6b9eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _init: {fileID: 1581576386}
+  _root: {fileID: 1581576386}
   _positionLabel: {fileID: 517559359}
   _rotationLabel: {fileID: 1559162152}
   _speedLabel: {fileID: 1557420060}
@@ -1667,6 +1705,36 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &1920817030
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1920817031}
+  m_Layer: 0
+  m_Name: BlueSoldiers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1920817031
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1920817030}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 70.9686, y: 2.0950549, z: -21.581774}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2023941536
 GameObject:
   m_ObjectHideFlags: 0

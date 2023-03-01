@@ -1,4 +1,6 @@
 using Asteroids.Model;
+using System.Collections.Generic;
+using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -18,6 +20,7 @@ public class Root : MonoBehaviour
     public Ship Ship => _shipModel;
     public LaserGun LaserGun => _laserGun;
     public LaserGunRollback LaserGunRollback => _laserGunRollback;
+    public PresentersFactory PresenterFactory => _factory;
 
     public void DisableShip()
     {

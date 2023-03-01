@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,23 +6,28 @@ namespace Asteroids.Model
 {
     public class Soldier : Enemy
     {
-        private List<Soldier> _targets;
-        private readonly float _speed;
+        public event Action<Soldier> Dead;
 
-        public Soldier(Vector2 position, float speed) : base(position, 0)
+        private Soldier _target;
+        private readonly float _speed;
+        private readonly Config.SoldiersTeam _team;
+
+        public Config.SoldiersTeam Team => _team;
+        public bool HasTarget => _target != null;
+
+        public Soldier(Vector2 position, float speed, Config.SoldiersTeam team) : base(position, 0)
         {
             _speed = speed;
+            _team = team;
         }
 
         public override void Update(float deltaTime)
         {
-            if (_targets.Count != 0)
+            if (_target != null)
             {
-                Transformable target = _targets[Random.Range(0, _targets.Count)];
-
-                Vector2 nextPosition = Vector2.MoveTowards(Position, target.Position, _speed * deltaTime);
+                Vector2 nextPosition = Vector2.MoveTowards(Position, _target.Position, _speed * deltaTime);
                 MoveTo(nextPosition);
-                LookAt(target.Position);
+                LookAt(_target.Position);
             }
         }
 
@@ -30,20 +36,26 @@ namespace Asteroids.Model
             Rotate(Vector2.SignedAngle(Quaternion.Euler(0, 0, Rotation) * Vector3.up, (Position - point)));
         }
 
-        public void AddTargets(List<Soldier> targets)
+        public void Die()
         {
-            if(targets.Count != 0)
-            {
-                for(int i = 0; i < targets.Count; i++)
-                {
-                    _targets.Add(targets[i]);
-                }
-            }
+            Dead?.Invoke(this);
         }
 
-        public void Deletetarget(Soldier target)
+        private void OnTargetSet()
         {
-            _targets.Remove(target);
+            _target.Dead += OnTargetLost;
+        }
+
+        public void SetTarget(Soldier target)
+        {
+            _target = target;
+            OnTargetSet();
+        }
+
+        private void OnTargetLost(Soldier soldier)
+        {
+            _target.Dead -= OnTargetLost;
+            _target = null;
         }
     }
 }

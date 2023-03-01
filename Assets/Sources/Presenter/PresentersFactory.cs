@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public class PresentersFactory : MonoBehaviour
 {
     [SerializeField] private Camera _camera;
+    [SerializeField] private Root _root;
     [SerializeField] private Presenter _laserGunBulletTemplate;
     [SerializeField] private Presenter _defaultGunBulletTemplate;
     [SerializeField] private Presenter _asteroidTemplate;
@@ -13,6 +14,17 @@ public class PresentersFactory : MonoBehaviour
     [SerializeField] private Presenter _nloTemplate;
     [SerializeField] private Presenter _blueSoldierTemplate;
     [SerializeField] private Presenter _redSoldierTemplate;
+    [SerializeField] private Transform _redSoldiers;
+    [SerializeField] private Transform _blueSoldiers;
+
+    private List<Soldier> _redTeam = new List<Soldier>();
+    private List<Soldier> _blueTeam = new List<Soldier>();
+
+    public List<Soldier> GetSoldierTeam(Config.SoldiersTeam team) => 
+        team != Config.SoldiersTeam.red ? _blueTeam : _redTeam;
+
+    public List<Soldier> GetEnemySoldierTeam(Config.SoldiersTeam team) =>
+        team != Config.SoldiersTeam.red ? _redTeam : _blueTeam;
 
     public void CreateBullet(Bullet bullet)
     {
@@ -46,12 +58,37 @@ public class PresentersFactory : MonoBehaviour
 
         return presenter;
     }
-    private void CreatSoldierArmy(int countSoldiers, List<Soldier> soldiers, Vector2 spawnPos)
+    private Presenter CreatePresenter(Presenter template, Transformable model, Transform parent)
+    {
+        Presenter presenter = Instantiate(template, parent);
+        presenter.Init(model, _camera);
+
+        return presenter;
+    }
+    private void CreatSoldierArmy(int countSoldiers, List<Soldier> soldiers, Vector2 spawnPos, Config.SoldiersTeam team)
     {
         for(int i = 0; i < countSoldiers; i++)
         {
-            Soldier soldier = new Soldier(spawnPos, Config.NloSpeed);
+            Soldier soldier = new Soldier(spawnPos, Config.NloSpeed, team);
+            soldier.Dead += OnDead;
+            SetTarget(soldier);
+            TrySetTargets();
             soldiers.Add(soldier);
+            Presenter template = team == Config.SoldiersTeam.red ? _redSoldierTemplate : _blueSoldierTemplate;
+            Transform parent = team == Config.SoldiersTeam.red ? _redSoldiers : _blueSoldiers;
+            CreatePresenter(template, soldier, parent);
+        }
+
+        AddSoldiersInTeam(team, soldiers);
+    }
+
+    private void SetTarget(Soldier soldier)
+    {
+        List<Soldier> enemyArmy = GetEnemySoldierTeam(soldier.Team);
+        if (enemyArmy.Count > 0)
+        {
+            int indexTarget = UnityEngine.Random.Range(0, enemyArmy.Count);
+            soldier.SetTarget(enemyArmy[indexTarget]);
         }
     }
 
@@ -60,16 +97,68 @@ public class PresentersFactory : MonoBehaviour
         List<Soldier> redArmy = new List<Soldier>(countSoldiers);
         List<Soldier> blueArmy = new List<Soldier>(countSoldiers);
 
-        CreatSoldierArmy(countSoldiers, redArmy, posRedArmy);
-        CreatSoldierArmy(countSoldiers, blueArmy, posBlueArmy);
+        CreatSoldierArmy(countSoldiers, redArmy, posRedArmy, Config.SoldiersTeam.red);
+        CreatSoldierArmy(countSoldiers, blueArmy, posBlueArmy, Config.SoldiersTeam.blue);
+    }
 
-        for(int i = 0; i < countSoldiers; i++)
+    private void OnDead(Soldier soldier)
+    {
+        DeleteSoldierFromTeam(soldier.Team, soldier);
+        soldier.Dead -= OnDead;
+        TrySetTargets();
+    }
+
+    private void TrySetTargets()
+    {
+        TrySetTargetsForTeam(Config.SoldiersTeam.blue);
+        TrySetTargetsForTeam(Config.SoldiersTeam.red);
+    }
+
+    private void TrySetTargetsForTeam(Config.SoldiersTeam teamName)
+    {
+        List<Soldier> team = GetSoldierTeam(teamName);
+        List<Soldier> enemyTeam = GetEnemySoldierTeam(teamName);
+
+        if (team.Count == 0 || enemyTeam.Count == 0)
+            return;
+
+        foreach (var soldier in team)
         {
-            blueArmy[i].AddTargets(redArmy);
-            CreatePresenter(_blueSoldierTemplate, blueArmy[i]);
+            if(soldier.HasTarget == false)
+            {
+                int indexTarget = UnityEngine.Random.Range(0, enemyTeam.Count);
+                soldier.SetTarget(enemyTeam[indexTarget]);
+            }
+        }
+    }
 
-            redArmy[i].AddTargets(blueArmy);
-            CreatePresenter(_redSoldierTemplate, redArmy[i]);
+    public void AddSoldiersInTeam(Config.SoldiersTeam team, List<Soldier> soldiers)
+    {
+        if (team == Config.SoldiersTeam.red)
+        {
+            for (int i = 0; i < soldiers.Count; i++)
+            {
+                _redTeam.Add(soldiers[i]);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < soldiers.Count; i++)
+            {
+                _blueTeam.Add(soldiers[i]);
+            }
+        }
+    }
+
+    public void DeleteSoldierFromTeam(Config.SoldiersTeam team, Soldier soldier)
+    {
+        if (team == Config.SoldiersTeam.red)
+        {
+            _redTeam.Remove(soldier);
+        }
+        else
+        {
+            _blueTeam.Remove(soldier);
         }
     }
 }

@@ -9,5 +9,11 @@
 
         public const string EnemyTag = "Enemy";
         public const string BulletsTag = "Bullets";
+
+        public enum SoldiersTeam 
+        {
+            red,
+            blue
+        }
     }
 }

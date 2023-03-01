@@ -3,12 +3,15 @@ using UnityEngine;
 
 public class Presenter : MonoBehaviour
 {
+    public Root Root { get; private set; }
+
     private Camera _camera;
     private Transformable _model;
 
     private IUpdatable _updatable = null;
 
     public Transformable Model => _model;
+    public bool HasTarget;
 
     public void Init(Transformable model, Camera camera)
     {
@@ -38,7 +41,16 @@ public class Presenter : MonoBehaviour
         _model.Destroying -= OnDestroying;
     }
 
-    private void Update() => _updatable?.Update(Time.deltaTime);
+    private void Update()
+    {
+        _updatable?.Update(Time.deltaTime);
+
+        if(Model is Soldier)
+        {
+            var soldier = (Soldier)Model;
+            HasTarget = soldier.HasTarget;
+        }
+    }
 
     private Vector3 GetViewportPosition(Transformable transformable)
     {
